@@ -15,7 +15,7 @@
   <div class="brand"><span class="mark">A</span><span>Aither</span></div>
   <p class="eyebrow">PRIVATE AREA</p>
   <h1 class="title" id="title">Admin login</h1>
-  <p class="muted">Sign in with your Aither Account to continue.</p>
+  <p class="muted">Sign in with an Aither Account that has admin access.</p>
   <form id="loginForm">
     <label for="email">Email</label>
     <input id="email" name="email" type="email" autocomplete="username" required>
@@ -29,35 +29,21 @@
 <script>
 (() => {
   'use strict';
-  // Keep the login hidden unless this tab reached it through the secret keypad.
-  if (sessionStorage.getItem('aither_admin_unlocked') !== '1') {
-    window.location.replace('../');
-    return;
-  }
-
-  const BACKEND = 'https://aitherbackend.onrender.com';
-  const form = document.getElementById('loginForm');
-  const status = document.getElementById('status');
-
-  form.addEventListener('submit', async event => {
-    event.preventDefault();
-    status.textContent = 'Signing in…';
-    const email = document.getElementById('email').value.trim();
-    const password = document.getElementById('password').value;
-    try {
-      const response = await fetch(`${BACKEND}/api/auth/login`, {
-        method:'POST',
-        credentials:'include',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({email,password})
-      });
-      const data = await response.json().catch(() => ({}));
-      if (!response.ok) throw new Error(data.detail || 'Invalid email or password.');
-      status.textContent = 'Signed in.';
-      window.location.replace('../');
-    } catch (error) {
-      status.textContent = error.message || 'Unable to sign in.';
-    }
+  if (sessionStorage.getItem('aither_admin_unlocked') !== '1') { window.location.replace('../'); return; }
+  const BACKEND='https://aitherbackend.onrender.com';
+  const form=document.getElementById('loginForm'),status=document.getElementById('status');
+  form.addEventListener('submit',async event=>{
+    event.preventDefault();status.textContent='Signing in…';
+    const email=document.getElementById('email').value.trim(),password=document.getElementById('password').value;
+    try{
+      const response=await fetch(`${BACKEND}/api/auth/login`,{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password})});
+      const data=await response.json().catch(()=>({}));
+      if(!response.ok)throw new Error(data.detail||'Invalid email or password.');
+      const adminCheck=await fetch(`${BACKEND}/api/admin/overview`,{credentials:'include'});
+      if(!adminCheck.ok)throw new Error(adminCheck.status===403?'This account does not have admin access.':'Admin service is unavailable.');
+      status.textContent='Admin access confirmed.';
+      window.location.replace('./dashboard.html');
+    }catch(error){status.textContent=error.message||'Unable to sign in.';}
   });
 })();
 </script>
