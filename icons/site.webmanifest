@@ -1,0 +1,17 @@
+{
+  "name": "Aither",
+  "short_name": "Aither",
+  "description": "Aither 404 page",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#f7f7f8",
+  "theme_color": "#f7f7f8",
+  "icons": [
+    {
+      "src": "./aither-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
