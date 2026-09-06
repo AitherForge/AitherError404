@@ -3,14 +3,12 @@
   'use strict';
 
   window.addEventListener('aither:secret-pattern', () => {
-    // The admin login lives on this AitherError404 site.
-    // Unlock only this browser tab, then navigate immediately.
     try {
       sessionStorage.setItem('aither_admin_unlocked', '1');
-    } catch (_) {
-      // Navigation still works if storage is unavailable.
-    }
+    } catch (_) {}
 
-    window.location.replace('./admin/');
+    // Always open the admin login on this AitherError404 GitHub Pages site,
+    // even when GitHub serves the custom 404 from a nested URL.
+    window.location.assign('/AitherError404/admin/');
   }, { once: true });
 })();
