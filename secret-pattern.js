@@ -1,116 +1,89 @@
-/* AitherError404 — secret touch code controller */
+/* AitherError404 — iPhone-style hidden keypad */
 (() => {
   'use strict';
 
-  // The hidden touch sequence is now: 0711, then 0503.
+  // Either code unlocks the hidden admin UI.
   const SECRET_CODES = ['0711', '0503'];
-  const GRID = [
-    ['1', '2', '3'],
-    ['4', '5', '6'],
-    ['7', '8', '9'],
-    ['0', '', '']
-  ];
-  const TARGET = 'aither-secret-pattern';
+  const TARGET = 'aither-secret-keypad';
+  const KEY_SIZE = 78;
 
   let input = '';
   let completed = false;
-  let tracking = false;
 
-  const overlay = document.createElement('div');
-  overlay.id = TARGET;
-  overlay.setAttribute('aria-hidden', 'true');
-  Object.assign(overlay.style, {
+  const keypad = document.createElement('div');
+  keypad.id = TARGET;
+  keypad.setAttribute('aria-hidden', 'true');
+  keypad.setAttribute('role', 'group');
+  keypad.setAttribute('aria-label', 'Secret keypad');
+  Object.assign(keypad.style, {
     position: 'fixed',
-    right: '14px',
-    bottom: 'max(42px, env(safe-area-inset-bottom))',
-    width: '132px',
-    height: '176px',
+    right: 'max(12px, env(safe-area-inset-right))',
+    bottom: 'max(12px, env(safe-area-inset-bottom))',
+    width: `${KEY_SIZE * 3}px`,
+    height: `${KEY_SIZE * 4}px`,
     zIndex: '9999',
     opacity: '0',
     pointerEvents: 'auto',
-    touchAction: 'none'
-  });
-
-  const grid = document.createElement('div');
-  Object.assign(grid.style, {
-    width: '100%',
-    height: '100%',
+    touchAction: 'manipulation',
     display: 'grid',
     gridTemplateColumns: 'repeat(3, 1fr)',
     gridTemplateRows: 'repeat(4, 1fr)',
-    gap: '0'
+    gap: '0',
+    background: 'transparent'
   });
 
-  GRID.flat().forEach(number => {
-    const point = document.createElement('button');
-    point.type = 'button';
-    point.dataset.number = number;
-    point.tabIndex = -1;
-    point.setAttribute('aria-label', number ? `Secret point ${number}` : 'Unused secret point');
-    Object.assign(point.style, {
+  // iPhone Phone keypad layout:
+  // 1 2 3
+  // 4 5 6
+  // 7 8 9
+  // * 0 #
+  const keys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '*', '0', '#'];
+
+  for (const key of keys) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.textContent = key;
+    button.dataset.key = key;
+    button.tabIndex = -1;
+    button.setAttribute('aria-label', `Secret keypad ${key}`);
+    Object.assign(button.style, {
       appearance: 'none',
       border: '0',
       background: 'transparent',
+      color: 'transparent',
       width: '100%',
       height: '100%',
       padding: '0',
       margin: '0',
+      outline: 'none',
+      fontSize: '1px',
       cursor: 'default',
-      touchAction: 'none'
+      touchAction: 'manipulation'
     });
-    grid.appendChild(point);
-  });
 
-  overlay.appendChild(grid);
-  document.body.appendChild(overlay);
+    button.addEventListener('pointerdown', event => {
+      event.preventDefault();
+      if (completed) return;
 
-  function reset() {
-    input = '';
-    tracking = false;
+      if (!/^\d$/.test(key)) {
+        input = '';
+        return;
+      }
+
+      input += key;
+      if (input.length > 4) input = input.slice(-4);
+
+      if (SECRET_CODES.includes(input)) {
+        completed = true;
+        window.dispatchEvent(new CustomEvent('aither:secret-pattern', {
+          detail: { code: input }
+        }));
+        input = '';
+      }
+    });
+
+    keypad.appendChild(button);
   }
 
-  function register(number) {
-    if (completed || !tracking || !number) return;
-    if (input.length >= 8) return;
-
-    input += number;
-
-    const validPrefix = SECRET_CODES.some(code => code.startsWith(input) || input === code);
-    const fullCode = SECRET_CODES.join('');
-
-    if (!validPrefix && !fullCode.startsWith(input)) {
-      reset();
-      return;
-    }
-
-    if (input === fullCode) {
-      completed = true;
-      window.dispatchEvent(new CustomEvent('aither:secret-pattern', {
-        detail: { codes: SECRET_CODES.slice() }
-      }));
-      reset();
-    }
-  }
-
-  function numberFromEvent(event) {
-    const target = document.elementFromPoint(event.clientX, event.clientY);
-    const point = target && target.closest && target.closest('[data-number]');
-    return point && point.dataset.number ? point.dataset.number : null;
-  }
-
-  overlay.addEventListener('pointerdown', event => {
-    tracking = true;
-    input = '';
-    const number = numberFromEvent(event);
-    if (number) register(number);
-  });
-
-  overlay.addEventListener('pointermove', event => {
-    if (!tracking) return;
-    const number = numberFromEvent(event);
-    if (number) register(number);
-  });
-
-  window.addEventListener('pointerup', reset, { passive: true });
-  window.addEventListener('pointercancel', reset, { passive: true });
+  document.body.appendChild(keypad);
 })();
