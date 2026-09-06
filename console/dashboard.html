@@ -5,18 +5,18 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f5f5f7">
 <meta name="robots" content="noindex,nofollow,noarchive">
-<title>Aither Dashboard</title>
+<title>Aither Admin Dashboard</title>
 <style>
-*{box-sizing:border-box}body{margin:0;background:#f5f5f7;color:#17171a;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.shell{max-width:1200px;margin:auto;padding:16px}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:8px 0 18px}.brand{font-weight:800;font-size:20px}.mark{display:inline-grid;place-items:center;width:38px;height:38px;margin-right:9px;border-radius:11px;background:#111;color:#fff}.actions{display:flex;gap:8px;flex-wrap:wrap}.button{border:1px solid #ddd;border-radius:11px;background:#fff;padding:10px 13px;font:inherit;font-weight:700;cursor:pointer}.primary{background:#111;color:#fff}.hero{padding:24px;border-radius:20px;background:#111;color:#fff;margin-bottom:16px}.hero h1{margin:0 0 6px}.hero p{margin:0;color:#bbb}.live{margin-top:14px;font-size:13px}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.card,.panel{background:#fff;border:1px solid #e3e3e7;border-radius:16px}.card{padding:16px}.label{font-size:11px;color:#777;font-weight:800;text-transform:uppercase}.value{font-size:28px;font-weight:800;margin-top:7px}.section{margin-top:16px}.section-title{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px}.section h2{font-size:18px;margin:0}.search{width:min(300px,100%);padding:10px 12px;border:1px solid #ddd;border-radius:10px;font:inherit}.row{display:grid;grid-template-columns:1fr 1fr 1.5fr 1fr;gap:10px;padding:12px 14px;border-bottom:1px solid #eee;font-size:13px}.row:last-child{border-bottom:0}.head{font-weight:800;color:#777;background:#fafafa;font-size:11px;text-transform:uppercase}.pill{display:inline-block;padding:4px 8px;border-radius:99px;background:#eee;font-weight:700;font-size:11px}.muted,.empty{color:#888}.empty{padding:24px;text-align:center}.error{padding:12px;margin:0 0 12px;border-radius:10px;background:#fff0f0;color:#a51d17}.footer{text-align:center;padding:24px;color:#888;font-size:12px}@media(max-width:800px){.grid{grid-template-columns:repeat(2,1fr)}.row{grid-template-columns:1fr 1fr}.row>*:nth-child(n+3){grid-column:span 2}}@media(max-width:500px){.top{align-items:flex-start;flex-direction:column}.actions,.button{width:100%}.grid{gap:8px}.card{padding:13px}.value{font-size:23px}.section-title{align-items:stretch;flex-direction:column}.search{width:100%}.row{grid-template-columns:1fr}.row>*:nth-child(n+3){grid-column:auto}}@media(prefers-color-scheme:dark){body{background:#111;color:#fff}.card,.panel,.button,.search{background:#1c1c1e;border-color:#333;color:#fff}.primary{background:#fff;color:#111}.row{border-color:#303033}.head{background:#252527}.muted,.empty{color:#aaa}.error{background:#351a19;color:#ffaaa5}}
+*{box-sizing:border-box}html{background:#f5f5f7}body{margin:0;background:#f5f5f7;color:#17171a;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.shell{max-width:1220px;margin:auto;padding:16px;padding-bottom:30px}.top{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:8px 0 18px}.brand{display:flex;align-items:center;font-weight:800;font-size:20px}.mark{display:inline-grid;place-items:center;width:40px;height:40px;margin-right:10px;border-radius:12px;background:#111;color:#fff;box-shadow:0 6px 16px #0002}.actions{display:flex;gap:8px;flex-wrap:wrap}.button{border:1px solid #ddd;border-radius:12px;background:#fff;padding:10px 13px;font:inherit;font-weight:700;cursor:pointer;transition:transform .15s,background .15s}.button:hover{transform:translateY(-1px);background:#f8f8f9}.primary{background:#111;color:#fff;border-color:#111}.hero{position:relative;overflow:hidden;padding:27px;border-radius:22px;background:#111;color:#fff;margin-bottom:16px;box-shadow:0 16px 40px #0002}.hero:after{content:"";position:absolute;width:220px;height:220px;right:-90px;top:-110px;border:1px solid #fff2;border-radius:50%;box-shadow:0 0 0 28px #fff1,0 0 0 58px #fff1}.eyebrow{font-size:11px;font-weight:800;letter-spacing:.09em;color:#aaa}.hero h1{position:relative;margin:6px 0 6px;font-size:30px;letter-spacing:-.03em}.hero p{position:relative;margin:0;color:#bbb}.live{position:relative;margin-top:15px;font-size:13px;color:#ddd}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.card,.panel{background:#fff;border:1px solid #e3e3e7;border-radius:17px}.card{padding:17px}.label{font-size:11px;color:#777;font-weight:800;text-transform:uppercase;letter-spacing:.04em}.value{font-size:29px;font-weight:800;margin-top:7px;letter-spacing:-.03em}.section{margin-top:17px}.section-title{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:9px}.section h2{font-size:18px;margin:0;letter-spacing:-.02em}.search{width:min(310px,100%);padding:10px 12px;border:1px solid #ddd;border-radius:11px;font:inherit;outline:none}.search:focus{border-color:#111;box-shadow:0 0 0 4px #1111}.row{display:grid;grid-template-columns:1fr 1fr 1.5fr 1fr;gap:10px;padding:12px 14px;border-bottom:1px solid #eee;font-size:13px;align-items:center}.row:last-child{border-bottom:0}.head{font-weight:800;color:#777;background:#fafafa;font-size:11px;text-transform:uppercase}.pill{display:inline-block;padding:4px 8px;border-radius:99px;background:#eee;font-weight:700;font-size:11px}.muted,.empty{color:#888}.empty{padding:25px;text-align:center}.error{padding:12px;margin:0 0 12px;border-radius:11px;background:#fff0f0;color:#a51d17}.footer{text-align:center;padding:25px 0 0;color:#888;font-size:12px}@media(max-width:800px){.grid{grid-template-columns:repeat(2,1fr)}.row{grid-template-columns:1fr 1fr}.row>*:nth-child(n+3){grid-column:span 2}}@media(max-width:500px){.shell{padding:12px}.top{align-items:stretch;flex-direction:column}.actions{display:grid;grid-template-columns:1fr 1fr}.actions .primary{grid-column:1/-1}.button{width:100%}.hero{padding:22px}.hero h1{font-size:27px}.grid{gap:8px}.card{padding:14px}.value{font-size:23px}.section-title{align-items:stretch;flex-direction:column}.search{width:100%}.row{grid-template-columns:1fr}.row>*:nth-child(n+3){grid-column:auto}}@media(prefers-color-scheme:dark){html,body{background:#111;color:#fff}.card,.panel,.button,.search{background:#1c1c1e;border-color:#333;color:#fff}.button:hover{background:#252527}.primary{background:#fff;color:#111;border-color:#fff}.row{border-color:#303033}.head{background:#252527}.muted,.empty{color:#aaa}.error{background:#351a19;color:#ffaaa5}.hero{box-shadow:0 16px 40px #0006}.search:focus{border-color:#fff;box-shadow:0 0 0 4px #fff2}}
 </style>
 </head>
 <body>
 <div class="shell">
 <header class="top">
-  <div class="brand"><span class="mark">A</span>Aither</div>
+  <div class="brand"><span class="mark">A</span>Aither Admin</div>
   <div class="actions"><button class="button" id="refresh">Refresh</button><button class="button" id="export">Export JSON</button><button class="button primary" id="logout">Sign out</button></div>
 </header>
-<section class="hero"><h1>System Monitor</h1><p>Account, application, backend, and telemetry activity.</p><div class="live" id="live">Connecting…</div></section>
+<section class="hero"><div class="eyebrow">ADMIN DASHBOARD</div><h1>System Monitor</h1><p>Account, application, backend, and telemetry activity.</p><div class="live" id="live">Connecting…</div></section>
 <div id="error" class="error" hidden></div>
 <section class="grid">
   <div class="card"><div class="label">Accounts</div><div class="value" id="users">—</div></div>
@@ -25,9 +25,9 @@
   <div class="card"><div class="label">Events</div><div class="value" id="events">—</div></div>
 </section>
 <section class="section"><div class="section-title"><h2>App activity</h2><span id="appCount" class="muted"></span></div><div class="panel" id="apps"><div class="empty">Loading…</div></div></section>
-<section class="section"><div class="section-title"><h2>Live activity</h2><input class="search" id="activitySearch" placeholder="Filter activity…"></div><div class="panel" id="activity"><div class="empty">Loading…</div></div></section>
-<section class="section"><div class="section-title"><h2>Accounts</h2><input class="search" id="userSearch" placeholder="Search accounts…"></div><div class="panel" id="usersTable"><div class="empty">Loading…</div></div></section>
-<footer class="footer">Aither • <span id="updated">Not updated yet</span></footer>
+<section class="section"><div class="section-title"><h2>Live activity</h2><input class="search" id="activitySearch" placeholder="Filter activity…" aria-label="Filter activity"></div><div class="panel" id="activity"><div class="empty">Loading…</div></div></section>
+<section class="section"><div class="section-title"><h2>Accounts</h2><input class="search" id="userSearch" placeholder="Search accounts…" aria-label="Search accounts"></div><div class="panel" id="usersTable"><div class="empty">Loading…</div></div></section>
+<footer class="footer">Aither Admin • <span id="updated">Not updated yet</span></footer>
 </div>
 <script>
 const API='https://aitherbackend.onrender.com';
@@ -35,88 +35,18 @@ const state={overview:null,activity:[],users:[],loading:false};
 const $=id=>document.getElementById(id);
 const esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const timeAgo=value=>{const seconds=Math.max(0,(Date.now()-new Date(value).getTime())/1000);return seconds<60?Math.floor(seconds)+'s ago':seconds<3600?Math.floor(seconds/60)+'m ago':Math.floor(seconds/3600)+'h ago'};
-
 if(sessionStorage.getItem('aither_console_unlocked')!=='1') location.replace('./');
-
-async function get(path){
-  const response=await fetch(API+path,{credentials:'include',cache:'no-store'});
-  if(response.status===401||response.status===403){sessionStorage.removeItem('aither_console_unlocked');location.replace('./');throw Error('Access required.');}
-  if(!response.ok) throw Error('Backend request failed ('+response.status+').');
-  return response.json();
-}
-
-function renderApps(){
-  const apps=Array.isArray(state.overview?.apps_last_15m)?state.overview.apps_last_15m:[];
-  $('appCount').textContent=apps.length+' app'+(apps.length===1?'':'s');
-  $('apps').innerHTML=apps.length
-    ? '<div class="row head"><div>App</div><div>Events</div><div>Status</div><div>Window</div></div>'+apps.map(app=>'<div class="row"><div><strong>'+esc(app.app_id)+'</strong></div><div>'+esc(app.events)+'</div><div><span class="pill">Receiving telemetry</span></div><div class="muted">15 minutes</div></div>').join('')
-    : '<div class="empty">No telemetry received yet.</div>';
-}
-
-function renderActivity(){
-  const query=$('activitySearch').value.trim().toLowerCase();
-  const rows=state.activity.filter(item=>!query||[item.app_id,item.event,item.user_email].some(value=>String(value||'').toLowerCase().includes(query)));
-  $('activity').innerHTML=rows.length
-    ? '<div class="row head"><div>App</div><div>Event</div><div>User</div><div>Time</div></div>'+rows.map(item=>'<div class="row"><div><span class="pill">'+esc(item.app_id)+'</span></div><div><strong>'+esc(item.event)+'</strong></div><div class="muted">'+esc(item.user_email||'anonymous')+'</div><div class="muted">'+esc(timeAgo(item.created_at))+'</div></div>').join('')
-    : '<div class="empty">'+(query?'No matching activity.':'No activity yet.')+'</div>';
-}
-
-function renderUsers(){
-  const query=$('userSearch').value.trim().toLowerCase();
-  const rows=state.users.filter(user=>!query||[user.name,user.email].some(value=>String(value||'').toLowerCase().includes(query)));
-  $('usersTable').innerHTML=rows.length
-    ? '<div class="row head"><div>Name</div><div>Email</div><div>Verification</div><div>Created</div></div>'+rows.map(user=>'<div class="row"><div><strong>'+esc(user.name||'Unnamed')+'</strong></div><div>'+esc(user.email)+'</div><div><span class="pill">'+(user.email_verified?'Verified':'Unverified')+'</span></div><div class="muted">'+esc(new Date(user.created_at).toLocaleString())+'</div></div>').join('')
-    : '<div class="empty">'+(query?'No matching accounts.':'No accounts.')+'</div>';
-}
-
-async function load(){
-  if(state.loading)return;
-  state.loading=true;
-  $('live').textContent='Refreshing…';
-  $('error').hidden=true;
-  try{
-    const [overview,activity,users]=await Promise.all([
-      get('/api/admin/overview'),
-      get('/api/admin/activity?limit=150'),
-      get('/api/admin/users')
-    ]);
-    state.overview=overview;
-    state.activity=Array.isArray(activity)?activity:[];
-    state.users=Array.isArray(users)?users:[];
-    $('users').textContent=overview.users??'—';
-    $('verified').textContent=overview.verified_users??'—';
-    $('sessions').textContent=overview.active_sessions??'—';
-    $('events').textContent=overview.events_last_15m??'—';
-    renderApps();renderActivity();renderUsers();
-    const updated=overview.generated_at?new Date(overview.generated_at):new Date();
-    $('live').textContent='Live • '+updated.toLocaleTimeString();
-    $('updated').textContent='Last updated '+updated.toLocaleTimeString();
-  }catch(error){
-    $('error').textContent=error.message||'Unable to load dashboard data.';
-    $('error').hidden=false;
-    $('live').textContent='Connection error';
-  }finally{state.loading=false;}
-}
-
+async function get(path){const response=await fetch(API+path,{credentials:'include',cache:'no-store'});if(response.status===401||response.status===403){sessionStorage.removeItem('aither_console_unlocked');location.replace('./');throw Error('Access required.');}if(!response.ok)throw Error('Backend request failed ('+response.status+').');return response.json();}
+function renderApps(){const apps=Array.isArray(state.overview?.apps_last_15m)?state.overview.apps_last_15m:[];$('appCount').textContent=apps.length+' app'+(apps.length===1?'':'s');$('apps').innerHTML=apps.length?'<div class="row head"><div>App</div><div>Events</div><div>Status</div><div>Window</div></div>'+apps.map(app=>'<div class="row"><div><strong>'+esc(app.app_id)+'</strong></div><div>'+esc(app.events)+'</div><div><span class="pill">Receiving telemetry</span></div><div class="muted">15 minutes</div></div>').join(''):'<div class="empty">No telemetry received yet.</div>';}
+function renderActivity(){const query=$('activitySearch').value.trim().toLowerCase();const rows=state.activity.filter(item=>!query||[item.app_id,item.event,item.user_email].some(value=>String(value||'').toLowerCase().includes(query)));$('activity').innerHTML=rows.length?'<div class="row head"><div>App</div><div>Event</div><div>User</div><div>Time</div></div>'+rows.map(item=>'<div class="row"><div><span class="pill">'+esc(item.app_id)+'</span></div><div><strong>'+esc(item.event)+'</strong></div><div class="muted">'+esc(item.user_email||'anonymous')+'</div><div class="muted">'+esc(timeAgo(item.created_at))+'</div></div>').join(''):'<div class="empty">'+(query?'No matching activity.':'No activity yet.')+'</div>';}
+function renderUsers(){const query=$('userSearch').value.trim().toLowerCase();const rows=state.users.filter(user=>!query||[user.name,user.email].some(value=>String(value||'').toLowerCase().includes(query)));$('usersTable').innerHTML=rows.length?'<div class="row head"><div>Name</div><div>Email</div><div>Verification</div><div>Created</div></div>'+rows.map(user=>'<div class="row"><div><strong>'+esc(user.name||'Unnamed')+'</strong></div><div>'+esc(user.email)+'</div><div><span class="pill">'+(user.email_verified?'Verified':'Unverified')+'</span></div><div class="muted">'+esc(new Date(user.created_at).toLocaleString())+'</div></div>').join(''):'<div class="empty">'+(query?'No matching accounts.':'No accounts.')+'</div>';}
+async function load(){if(state.loading)return;state.loading=true;$('live').textContent='Refreshing…';$('error').hidden=true;try{const [overview,activity,users]=await Promise.all([get('/api/admin/overview'),get('/api/admin/activity?limit=150'),get('/api/admin/users')]);state.overview=overview;state.activity=Array.isArray(activity)?activity:[];state.users=Array.isArray(users)?users:[];$('users').textContent=overview.users??'—';$('verified').textContent=overview.verified_users??'—';$('sessions').textContent=overview.active_sessions??'—';$('events').textContent=overview.events_last_15m??'—';renderApps();renderActivity();renderUsers();const updated=overview.generated_at?new Date(overview.generated_at):new Date();$('live').textContent='Live • '+updated.toLocaleTimeString();$('updated').textContent='Last updated '+updated.toLocaleTimeString();}catch(error){$('error').textContent=error.message||'Unable to load dashboard data.';$('error').hidden=false;$('live').textContent='Connection error';}finally{state.loading=false;}}
 $('refresh').onclick=load;
 $('activitySearch').oninput=renderActivity;
 $('userSearch').oninput=renderUsers;
-$('logout').onclick=async()=>{
-  try{await fetch(API+'/api/auth/logout',{method:'POST',credentials:'include'})}catch{}
-  sessionStorage.removeItem('aither_console_unlocked');
-  location.replace('./');
-};
-$('export').onclick=()=>{
-  if(!state.overview){alert('Load the dashboard first.');return;}
-  const data={exported_at:new Date().toISOString(),overview:state.overview,activity:state.activity,users:state.users};
-  const url=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
-  const link=document.createElement('a');
-  link.href=url;link.download='aither-export.json';link.click();
-  setTimeout(()=>URL.revokeObjectURL(url),1000);
-};
-
-load();
-setInterval(load,15000);
+$('logout').onclick=async()=>{try{await fetch(API+'/api/auth/logout',{method:'POST',credentials:'include'})}catch{}sessionStorage.removeItem('aither_console_unlocked');location.replace('./');};
+$('export').onclick=()=>{if(!state.overview){alert('Load the dashboard first.');return;}const data={exported_at:new Date().toISOString(),overview:state.overview,activity:state.activity,users:state.users};const url=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));const link=document.createElement('a');link.href=url;link.download='aither-admin-export.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
+load();setInterval(load,15000);
 </script>
 </body>
 </html>
