@@ -1,30 +1,30 @@
 # AitherError404
 
-Aither's branded 404 page with a protected admin entry point.
+Aither's branded 404 experience with a protected private entry point.
 
 ## Features
 
 - Clean, responsive Aither 404 experience
 - GitHub Pages compatible
-- Hidden corner-and-logo admin unlock gesture
-- Backend-enforced admin authentication
-- Responsive Aither Admin dashboard
+- Hidden corner-and-logo unlock gesture
+- Backend-enforced authentication
+- Responsive private dashboard
 - Live account, session, application, and telemetry overview
 - Activity and account search/filtering
 - Manual refresh and optional 15-second auto-refresh
-- JSON export of the currently loaded admin data
+- JSON export of the currently loaded data
 - Mobile-friendly controls and dark-mode support
-- Admin pages marked `noindex`, `nofollow`, and `noarchive`
+- Private pages marked `noindex`, `nofollow`, and `noarchive`
 
-## Admin flow
+## Private flow
 
-The public 404 page contains the hidden unlock gesture. After it is completed, the browser is sent to `/admin/`. The admin page then authenticates against the Aither backend and verifies admin access before opening the dashboard.
+The public 404 page contains the hidden unlock gesture. After it is completed, the browser is sent to `/console/`. The private page then authenticates against the Aither backend and verifies access before opening the dashboard.
 
-The browser-side unlock is only a navigation gate. **It is not the security boundary.** The backend must continue to enforce authentication and authorization for every `/api/admin/*` endpoint.
+The browser-side unlock is only a navigation gate. **It is not the security boundary.** The backend must continue to enforce authentication and authorization for every protected data endpoint.
 
 ## Backend
 
-The admin UI currently uses the Aither backend at:
+The private interface currently uses the Aither backend at:
 
 `https://aitherbackend.onrender.com`
 
@@ -40,7 +40,7 @@ Used endpoints:
 
 This repository is designed to run as a static GitHub Pages site. No private credentials, API keys, passwords, or session tokens should be committed to this repository.
 
-## Admin features
+## Dashboard features
 
 The dashboard includes:
 
