@@ -2,13 +2,15 @@
 (() => {
   'use strict';
 
-  // A successful hidden keypad code immediately opens the Aither admin dashboard.
-  // The dashboard handles the actual account/session login.
-  const ADMIN_LOGIN_URL = 'https://ogaithertech.github.io/AitherDashboard/';
-
   window.addEventListener('aither:secret-pattern', () => {
-    // Replace the 404 page in the current history entry so Back does not
-    // immediately return to the hidden-keypad page.
-    window.location.replace(ADMIN_LOGIN_URL);
+    // The admin login lives on this AitherError404 site.
+    // Unlock only this browser tab, then navigate immediately.
+    try {
+      sessionStorage.setItem('aither_admin_unlocked', '1');
+    } catch (_) {
+      // Navigation still works if storage is unavailable.
+    }
+
+    window.location.replace('./admin/');
   }, { once: true });
 })();
