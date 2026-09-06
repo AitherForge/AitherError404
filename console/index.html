@@ -5,69 +5,48 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f5f5f7">
 <meta name="robots" content="noindex,nofollow,noarchive">
-<title>Aither — Sign in</title>
+<title>Aither Admin — Sign in</title>
 <style>
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:20px;background:#f5f5f7;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#17171a}.card{width:min(440px,100%);padding:30px;border:1px solid #ddd;border-radius:24px;background:#fff;box-shadow:0 20px 60px #0001}.brand{font-weight:800;font-size:19px;margin-bottom:28px}.mark{display:inline-grid;place-items:center;width:36px;height:36px;margin-right:9px;border-radius:11px;background:#111;color:#fff}.title{font-size:32px;margin:0 0 8px}.muted{color:#707075;line-height:1.5}label{display:block;font-size:13px;font-weight:700;margin:15px 0 7px}input{width:100%;padding:13px;border:1px solid #ccc;border-radius:12px;font:inherit}.password{position:relative}.password input{padding-right:65px}.show{position:absolute;right:7px;top:7px;border:0;background:transparent;padding:7px;cursor:pointer}.login{width:100%;margin-top:20px;padding:13px;border:0;border-radius:12px;background:#111;color:#fff;font:inherit;font-weight:700;cursor:pointer}.login:disabled{opacity:.5}.status{min-height:22px;margin-top:12px;font-size:13px}.bad{color:#b42318}.good{color:#18794e}.back{display:block;margin-top:18px;text-align:center;color:#777;text-decoration:none;font-size:13px}@media(prefers-color-scheme:dark){body{background:#111;color:#fff}.card{background:#1c1c1e;border-color:#333}input{background:#252527;color:#fff;border-color:#444}.login{background:#fff;color:#111}.muted,.back{color:#aaa}.mark{background:#fff;color:#111}}
+*{box-sizing:border-box}html{min-height:100%;background:#f5f5f7}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:20px;padding-top:max(20px,env(safe-area-inset-top));padding-bottom:max(20px,env(safe-area-inset-bottom));background:radial-gradient(circle at 50% 0,#fff 0,#f5f5f7 52%);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#17171a}.card{width:min(460px,100%);padding:32px;border:1px solid #dedee3;border-radius:28px;background:#fff;box-shadow:0 24px 80px #00000012}.brand{display:flex;align-items:center;font-weight:800;font-size:19px;margin-bottom:30px}.mark{display:inline-grid;place-items:center;width:40px;height:40px;margin-right:10px;border-radius:12px;background:#111;color:#fff;box-shadow:0 6px 16px #0002}.eyebrow{display:inline-flex;padding:6px 9px;border-radius:999px;background:#f0f0f2;color:#555;font-size:11px;font-weight:800;letter-spacing:.08em}.title{font-size:34px;letter-spacing:-.04em;margin:13px 0 8px}.muted{color:#707075;line-height:1.5;margin:0}.form{margin-top:24px}label{display:block;font-size:13px;font-weight:700;margin:17px 0 7px}input{width:100%;padding:14px;border:1px solid #ccc;border-radius:13px;background:#fff;color:#17171a;font:inherit;outline:none;transition:border-color .15s,box-shadow .15s}input:focus{border-color:#111;box-shadow:0 0 0 4px #1111}.password{position:relative}.password input{padding-right:70px}.show{position:absolute;right:7px;top:7px;border:0;border-radius:9px;background:transparent;padding:7px 9px;color:#555;font:inherit;font-size:12px;font-weight:700;cursor:pointer}.show:hover{background:#f2f2f4}.login{width:100%;margin-top:22px;padding:14px;border:0;border-radius:13px;background:#111;color:#fff;font:inherit;font-weight:800;cursor:pointer;transition:transform .15s,opacity .15s}.login:hover:not(:disabled){transform:translateY(-1px)}.login:disabled{opacity:.55;cursor:wait}.status{min-height:22px;margin-top:12px;font-size:13px}.bad{color:#b42318}.good{color:#18794e}.hint{margin-top:18px;padding:12px 13px;border:1px solid #e7e7ea;border-radius:12px;background:#fafafa;color:#777;font-size:12px;line-height:1.45}.back{display:block;margin-top:20px;text-align:center;color:#777;text-decoration:none;font-size:13px}.back:hover{color:#111}@media(max-width:500px){body{padding-left:14px;padding-right:14px}.card{padding:25px 20px;border-radius:22px}.title{font-size:30px}}@media(prefers-color-scheme:dark){html,body{background:#111;color:#fff}body{background:radial-gradient(circle at 50% 0,#252527 0,#111 55%)}.card{background:#1c1c1e;border-color:#333;box-shadow:0 24px 80px #0006}.mark{background:#fff;color:#111}.eyebrow,.hint{background:#252527;border-color:#38383b;color:#aaa}.muted,.back{color:#aaa}input{background:#252527;color:#fff;border-color:#444}input:focus{border-color:#fff;box-shadow:0 0 0 4px #fff2}.show:hover{background:#333}.login{background:#fff;color:#111}.back:hover{color:#fff}}
 </style>
 </head>
 <body>
 <main class="card">
-  <div class="brand"><span class="mark">A</span>Aither</div>
-  <h1 class="title">Sign in</h1>
-  <p class="muted">Sign in with an account that has access.</p>
-  <form id="loginForm">
+  <div class="brand"><span class="mark">A</span>Aither Admin</div>
+  <span class="eyebrow">ADMIN AREA</span>
+  <h1 class="title">Admin sign in</h1>
+  <p class="muted">Sign in with an authorized account to continue to the private dashboard.</p>
+  <form class="form" id="loginForm">
     <label for="email">Email</label>
-    <input id="email" type="email" autocomplete="username" required>
+    <input id="email" type="email" inputmode="email" autocomplete="username" autocapitalize="none" spellcheck="false" required autofocus>
     <label for="password">Password</label>
-    <div class="password"><input id="password" type="password" autocomplete="current-password" required><button class="show" id="show" type="button">Show</button></div>
+    <div class="password"><input id="password" type="password" autocomplete="current-password" required><button class="show" id="show" type="button" aria-label="Show password">Show</button></div>
     <button class="login" id="login" type="submit">Sign in</button>
     <div class="status" id="status" aria-live="polite"></div>
   </form>
-  <a class="back" href="../">Return</a>
+  <div class="hint">Protected access • Your credentials are checked by the Aither backend.</div>
+  <a class="back" href="../">Return to Aither</a>
 </main>
 <script>
 const API='https://aitherbackend.onrender.com';
 const $=id=>document.getElementById(id);
 const status=(text,type='')=>{$('status').textContent=text;$('status').className='status '+type};
-
 if(sessionStorage.getItem('aither_console_unlocked')!=='1') location.replace('../');
-
-$('show').onclick=()=>{
-  const input=$('password');
-  input.type=input.type==='password'?'text':'password';
-  $('show').textContent=input.type==='password'?'Show':'Hide';
-};
-
+$('show').onclick=()=>{const input=$('password');const visible=input.type==='password';input.type=visible?'text':'password';$('show').textContent=visible?'Hide':'Show';$('show').setAttribute('aria-label',visible?'Hide password':'Show password');};
 $('loginForm').onsubmit=async event=>{
   event.preventDefault();
-  const email=$('email').value.trim();
-  const password=$('password').value;
+  const email=$('email').value.trim(),password=$('password').value;
   if(!email||!password){status('Enter your email and password.','bad');return;}
-
-  $('login').disabled=true;
-  $('login').textContent='Signing in…';
-  status('Checking credentials…');
-
+  $('login').disabled=true;$('login').textContent='Signing in…';status('Checking credentials…');
   try{
-    const response=await fetch(API+'/api/auth/login',{
-      method:'POST',
-      credentials:'include',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({email,password})
-    });
+    const response=await fetch(API+'/api/auth/login',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password})});
     const data=await response.json().catch(()=>({}));
     if(!response.ok) throw new Error(data.detail||'Invalid email or password.');
-
     const check=await fetch(API+'/api/admin/overview',{credentials:'include',cache:'no-store'});
-    if(!check.ok) throw new Error(check.status===403?'This account does not have access.':'The backend is unavailable.');
-
-    status('Access confirmed.','good');
-    location.replace('./dashboard.html');
-  }catch(error){
-    status(error.message||'Unable to sign in.','bad');
-    $('login').disabled=false;
-    $('login').textContent='Sign in';
-  }
+    if(!check.ok) throw new Error(check.status===403?'This account does not have admin access.':'The backend is unavailable.');
+    status('Admin access confirmed.','good');
+    setTimeout(()=>location.replace('./dashboard.html'),180);
+  }catch(error){status(error.message||'Unable to sign in.','bad');$('login').disabled=false;$('login').textContent='Sign in';}
 };
 </script>
 </body>
