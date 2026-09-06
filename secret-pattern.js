@@ -1,15 +1,20 @@
-/* AitherError404 — secret touch pattern controller */
+/* AitherError404 — secret touch code controller */
 (() => {
   'use strict';
 
-  const SECRET_PATTERN = [1, 5, 9, 8, 7, 4, 2];
-  const GRID_SIZE = 3;
-  const MAX_POINTS = 12;
+  // The hidden touch sequence is now: 0711, then 0503.
+  const SECRET_CODES = ['0711', '0503'];
+  const GRID = [
+    ['1', '2', '3'],
+    ['4', '5', '6'],
+    ['7', '8', '9'],
+    ['0', '', '']
+  ];
   const TARGET = 'aither-secret-pattern';
 
-  let points = [];
-  let tracking = false;
+  let input = '';
   let completed = false;
+  let tracking = false;
 
   const overlay = document.createElement('div');
   overlay.id = TARGET;
@@ -19,79 +24,91 @@
     right: '14px',
     bottom: 'max(42px, env(safe-area-inset-bottom))',
     width: '132px',
-    height: '132px',
+    height: '176px',
     zIndex: '9999',
     opacity: '0',
-    pointerEvents: 'none'
+    pointerEvents: 'auto',
+    touchAction: 'none'
   });
 
   const grid = document.createElement('div');
   Object.assign(grid.style, {
-    width: '100%', height: '100%', display: 'grid',
-    gridTemplateColumns: 'repeat(3, 1fr)', gridTemplateRows: 'repeat(3, 1fr)'
+    width: '100%',
+    height: '100%',
+    display: 'grid',
+    gridTemplateColumns: 'repeat(3, 1fr)',
+    gridTemplateRows: 'repeat(4, 1fr)',
+    gap: '0'
   });
 
-  for (let i = 1; i <= GRID_SIZE * GRID_SIZE; i++) {
+  GRID.flat().forEach(number => {
     const point = document.createElement('button');
     point.type = 'button';
-    point.dataset.point = String(i);
+    point.dataset.number = number;
     point.tabIndex = -1;
-    point.setAttribute('aria-label', `Secret point ${i}`);
+    point.setAttribute('aria-label', number ? `Secret point ${number}` : 'Unused secret point');
     Object.assign(point.style, {
-      appearance: 'none', border: '0', background: 'transparent',
-      width: '100%', height: '100%', padding: '0', margin: '0',
-      cursor: 'default', touchAction: 'none'
+      appearance: 'none',
+      border: '0',
+      background: 'transparent',
+      width: '100%',
+      height: '100%',
+      padding: '0',
+      margin: '0',
+      cursor: 'default',
+      touchAction: 'none'
     });
     grid.appendChild(point);
-  }
+  });
 
   overlay.appendChild(grid);
   document.body.appendChild(overlay);
 
   function reset() {
-    points = [];
+    input = '';
     tracking = false;
   }
 
-  function registerPoint(number) {
-    if (completed || !tracking || points.length >= MAX_POINTS) return;
-    if (points[points.length - 1] === number) return;
-    if (points.includes(number)) {
+  function register(number) {
+    if (completed || !tracking || !number) return;
+    if (input.length >= 8) return;
+
+    input += number;
+
+    const validPrefix = SECRET_CODES.some(code => code.startsWith(input) || input === code);
+    const fullCode = SECRET_CODES.join('');
+
+    if (!validPrefix && !fullCode.startsWith(input)) {
       reset();
       return;
     }
-    points.push(number);
 
-    if (points.length === SECRET_PATTERN.length) {
-      if (points.every((value, index) => value === SECRET_PATTERN[index])) {
-        completed = true;
-        window.dispatchEvent(new CustomEvent('aither:secret-pattern', {
-          detail: { pattern: SECRET_PATTERN.slice() }
-        }));
-        reset();
-      } else {
-        reset();
-      }
+    if (input === fullCode) {
+      completed = true;
+      window.dispatchEvent(new CustomEvent('aither:secret-pattern', {
+        detail: { codes: SECRET_CODES.slice() }
+      }));
+      reset();
     }
   }
 
-  function pointFromEvent(event) {
+  function numberFromEvent(event) {
     const target = document.elementFromPoint(event.clientX, event.clientY);
-    const point = target && target.closest && target.closest('[data-point]');
-    return point ? Number(point.dataset.point) : null;
+    const point = target && target.closest && target.closest('[data-number]');
+    return point && point.dataset.number ? point.dataset.number : null;
   }
 
   overlay.addEventListener('pointerdown', event => {
     tracking = true;
-    points = [];
-    const number = pointFromEvent(event);
-    if (number) registerPoint(number);
+    input = '';
+    const number = numberFromEvent(event);
+    if (number) register(number);
   });
 
   overlay.addEventListener('pointermove', event => {
     if (!tracking) return;
-    const number = pointFromEvent(event);
-    if (number) registerPoint(number);
+    const number = numberFromEvent(event);
+    if (number) register(number);
   });
 
   window.addEventListener('pointerup', reset, { passive: true });
