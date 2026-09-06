@@ -1,110 +1,116 @@
-/* AitherError404 — hidden iPhone-style keypad */
+/* AitherError404 — hidden admin gesture */
 (() => {
   'use strict';
 
-  const SECRET_CODES = new Set(['0711', '0503']);
-  const KEYS = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '*', '0', '#'];
-  const TARGET = 'aither-secret-keypad';
-
-  // Large, easy-to-hit phone keypad. It stays invisible but remains touchable.
-  const KEY_SIZE = 92;
-  const GAP = 6;
-
-  let input = '';
-  let lastKey = '';
+  const TARGET = 'aither-secret-gesture';
+  const CORNER_SIZE = 150;
+  const HOLD_MS = 1800;
+  const corners = new Set();
+  let holdTimer = null;
   let completed = false;
 
-  const keypad = document.createElement('div');
-  keypad.id = TARGET;
-  keypad.setAttribute('aria-hidden', 'true');
-  keypad.setAttribute('role', 'group');
-  Object.assign(keypad.style, {
+  const gesture = document.createElement('div');
+  gesture.id = TARGET;
+  gesture.setAttribute('aria-hidden', 'true');
+  Object.assign(gesture.style, {
     position: 'fixed',
-    right: 'max(12px, env(safe-area-inset-right))',
-    bottom: 'max(12px, env(safe-area-inset-bottom))',
-    width: `${KEY_SIZE * 3 + GAP * 2}px`,
-    height: `${KEY_SIZE * 4 + GAP * 3}px`,
+    inset: '0',
     zIndex: '99999',
-    opacity: '0',
-    pointerEvents: 'auto',
-    display: 'grid',
-    gridTemplateColumns: 'repeat(3, 1fr)',
-    gridTemplateRows: 'repeat(4, 1fr)',
-    gap: `${GAP}px`,
-    touchAction: 'none',
+    pointerEvents: 'none',
     userSelect: 'none',
     WebkitUserSelect: 'none'
   });
 
-  for (const key of KEYS) {
-    const button = document.createElement('button');
-    button.type = 'button';
-    button.dataset.key = key;
-    button.tabIndex = -1;
-    button.setAttribute('aria-label', `Secret keypad ${key}`);
-    Object.assign(button.style, {
-      appearance: 'none',
-      WebkitAppearance: 'none',
-      border: '0',
-      borderRadius: '50%',
-      background: 'transparent',
-      color: 'transparent',
-      width: '100%',
-      height: '100%',
-      minWidth: `${KEY_SIZE}px`,
-      minHeight: `${KEY_SIZE}px`,
-      padding: '0',
-      margin: '0',
-      outline: 'none',
-      opacity: '0',
+  const positions = [
+    ['top-left', 0, 0],
+    ['top-right', null, 0],
+    ['bottom-left', 0, null],
+    ['bottom-right', null, null]
+  ];
+
+  function addCorner(name, left, top) {
+    const zone = document.createElement('div');
+    zone.dataset.corner = name;
+    Object.assign(zone.style, {
+      position: 'absolute',
+      width: `${CORNER_SIZE}px`,
+      height: `${CORNER_SIZE}px`,
+      left: left === null ? 'auto' : '0',
+      right: left === null ? '0' : 'auto',
+      top: top === null ? 'auto' : '0',
+      bottom: top === null ? '0' : 'auto',
       pointerEvents: 'auto',
-      touchAction: 'none',
-      WebkitTapHighlightColor: 'transparent',
-      cursor: 'default'
+      background: 'transparent',
+      touchAction: 'manipulation',
+      WebkitTapHighlightColor: 'transparent'
     });
 
-    button.addEventListener('pointerdown', event => {
+    const tap = event => {
       event.preventDefault();
       event.stopPropagation();
-      if (completed) return;
-
-      if (lastKey === key && event.pointerType !== 'touch') return;
-      lastKey = key;
-
-      if (!/^\d$/.test(key)) {
-        input = '';
-        return;
+      corners.add(name);
+      if (corners.size === 4) {
+        // The four corners must be tapped before the logo can complete the gesture.
+        document.documentElement.dataset.aitherCornersReady = '1';
       }
+    };
 
-      input += key;
-      if (input.length > 4) input = input.slice(-4);
-
-      if (SECRET_CODES.has(input)) {
-        completed = true;
-        const code = input;
-        input = '';
-        window.dispatchEvent(new CustomEvent('aither:secret-pattern', {
-          detail: { code }
-        }));
-        return;
-      }
-
-      if (![...SECRET_CODES].some(code => code.startsWith(input))) {
-        input = '';
-      }
-    }, { passive: false });
-
-    button.addEventListener('pointerup', () => {
-      lastKey = '';
-    }, { passive: true });
-
-    button.addEventListener('pointercancel', () => {
-      lastKey = '';
-      input = '';
-    }, { passive: true });
-
-    keypad.appendChild(button);
+    zone.addEventListener('pointerup', tap, { passive: false });
+    zone.addEventListener('click', tap, { passive: false });
+    zone.addEventListener('pointercancel', () => corners.delete(name));
+    gesture.appendChild(zone);
   }
 
-  document.body.appendChild(keypad);
+  positions.forEach(([name, left, top]) => addCorner(name, left, top));
+
+  // The logo is the visible Aither mark on the 404 page.
+  function findLogo() {
+    return document.querySelector('.mark');
+  }
+
+  function startHold(event) {
+    const logo = findLogo();
+    if (!logo || completed || corners.size !== 4) return;
+    event.preventDefault();
+    event.stopPropagation();
+    clearTimeout(holdTimer);
+    logo.dataset.aitherHolding = '1';
+    holdTimer = setTimeout(() => {
+      completed = true;
+      try { sessionStorage.setItem('aither_admin_unlocked', '1'); } catch (_) {}
+      window.dispatchEvent(new CustomEvent('aither:secret-pattern', {
+        detail: { method: 'corners-and-logo-hold' }
+      }));
+    }, HOLD_MS);
+  }
+
+  function endHold(event) {
+    const logo = findLogo();
+    if (logo) delete logo.dataset.aitherHolding;
+    clearTimeout(holdTimer);
+    holdTimer = null;
+  }
+
+  function attachLogo() {
+    const logo = findLogo();
+    if (!logo || logo.dataset.aitherSecretAttached) return !!logo;
+    logo.dataset.aitherSecretAttached = '1';
+    Object.assign(logo.style, {
+      position: 'relative',
+      cursor: 'default',
+      WebkitTapHighlightColor: 'transparent',
+      touchAction: 'manipulation'
+    });
+    logo.addEventListener('pointerdown', startHold, { passive: false });
+    logo.addEventListener('pointerup', endHold, { passive: true });
+    logo.addEventListener('pointercancel', endHold, { passive: true });
+    logo.addEventListener('pointerleave', endHold, { passive: true });
+    logo.addEventListener('contextmenu', event => event.preventDefault());
+    return true;
+  }
+
+  document.body.appendChild(gesture);
+  if (!attachLogo()) {
+    window.addEventListener('load', attachLogo, { once: true });
+  }
 })();
