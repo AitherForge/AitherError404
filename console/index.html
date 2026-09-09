@@ -29,9 +29,12 @@
 </main>
 <script>
 const API='https://aitherbackend.onrender.com';
+const TOKEN_KEY='aither_admin_session_token';
 const $=id=>document.getElementById(id);
 const status=(text,type='')=>{$('status').textContent=text;$('status').className='status '+type};
-if(sessionStorage.getItem('aither_console_unlocked')!=='1') location.replace('../');
+const getToken=()=>sessionStorage.getItem(TOKEN_KEY)||'';
+const authHeaders=()=>{const token=getToken();return token?{Authorization:'Bearer '+token}:{};};
+if(sessionStorage.getItem('aither_console_unlocked')!=='1' && !getToken()) location.replace('../');
 $('show').onclick=()=>{const input=$('password');const visible=input.type==='password';input.type=visible?'text':'password';$('show').textContent=visible?'Hide':'Show';$('show').setAttribute('aria-label',visible?'Hide password':'Show password');};
 $('loginForm').onsubmit=async event=>{
   event.preventDefault();
@@ -42,8 +45,16 @@ $('loginForm').onsubmit=async event=>{
     const response=await fetch(API+'/api/auth/login',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password})});
     const data=await response.json().catch(()=>({}));
     if(!response.ok) throw new Error(data.detail||'Invalid email or password.');
-    const check=await fetch(API+'/api/admin/overview',{credentials:'include',cache:'no-store'});
-    if(!check.ok) throw new Error(check.status===403?'This account does not have admin access.':'The backend is unavailable.');
+    if(!data.session_token) throw new Error('The backend did not return a session token.');
+    sessionStorage.setItem(TOKEN_KEY,data.session_token);
+    sessionStorage.setItem('aither_console_unlocked','1');
+    const check=await fetch(API+'/api/admin/overview',{credentials:'include',cache:'no-store',headers:authHeaders()});
+    if(!check.ok) {
+      sessionStorage.removeItem(TOKEN_KEY);
+      if(check.status===403) throw new Error('This account does not have admin access.');
+      if(check.status===401) throw new Error('The admin session was rejected by the backend.');
+      throw new Error('The backend is unavailable.');
+    }
     status('Admin access confirmed.','good');
     setTimeout(()=>location.replace('./dashboard.html'),180);
   }catch(error){status(error.message||'Unable to sign in.','bad');$('login').disabled=false;$('login').textContent='Sign in';}
