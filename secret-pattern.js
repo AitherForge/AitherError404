@@ -50,7 +50,6 @@
       event.stopPropagation();
       corners.add(name);
       if (corners.size === 4) {
-        // The four corners must be tapped before the logo can complete the gesture.
         document.documentElement.dataset.aitherCornersReady = '1';
       }
     };
@@ -63,9 +62,10 @@
 
   positions.forEach(([name, left, top]) => addCorner(name, left, top));
 
-  // The logo is the visible Aither mark on the 404 page.
+  // The visible Aither logo changed from .mark to .brand-logo.
+  // Keep .mark as a fallback so older cached pages still work.
   function findLogo() {
-    return document.querySelector('.mark');
+    return document.querySelector('.brand-logo, .mark, [data-aither-logo], img[alt="Aither Forge"]');
   }
 
   function startHold(event) {
@@ -73,10 +73,16 @@
     if (!logo || completed || corners.size !== 4) return;
     event.preventDefault();
     event.stopPropagation();
+
     clearTimeout(holdTimer);
     logo.dataset.aitherHolding = '1';
+    if (event.pointerId !== undefined && logo.setPointerCapture) {
+      try { logo.setPointerCapture(event.pointerId); } catch (_) {}
+    }
+
     holdTimer = setTimeout(() => {
       completed = true;
+      delete logo.dataset.aitherHolding;
       try { sessionStorage.setItem('aither_admin_unlocked', '1'); } catch (_) {}
       window.dispatchEvent(new CustomEvent('aither:secret-pattern', {
         detail: { method: 'corners-and-logo-hold' }
@@ -84,7 +90,7 @@
     }, HOLD_MS);
   }
 
-  function endHold(event) {
+  function endHold() {
     const logo = findLogo();
     if (logo) delete logo.dataset.aitherHolding;
     clearTimeout(holdTimer);
@@ -99,18 +105,19 @@
       position: 'relative',
       cursor: 'default',
       WebkitTapHighlightColor: 'transparent',
-      touchAction: 'manipulation'
+      touchAction: 'none'
     });
     logo.addEventListener('pointerdown', startHold, { passive: false });
     logo.addEventListener('pointerup', endHold, { passive: true });
     logo.addEventListener('pointercancel', endHold, { passive: true });
-    logo.addEventListener('pointerleave', endHold, { passive: true });
+    logo.addEventListener('lostpointercapture', endHold, { passive: true });
     logo.addEventListener('contextmenu', event => event.preventDefault());
     return true;
   }
 
   document.body.appendChild(gesture);
   if (!attachLogo()) {
+    window.addEventListener('DOMContentLoaded', attachLogo, { once: true });
     window.addEventListener('load', attachLogo, { once: true });
   }
 })();
