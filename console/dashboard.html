@@ -30,7 +30,7 @@
 <footer class="footer">Aither Admin • <span id="updated">Not updated yet</span></footer>
 </div>
 <script>
-const API='https://aitherbackend.onrender.com';
+const API='https://aitherbackendnew.onrender.com';
 const TOKEN_KEY='aither_admin_session_token';
 const state={overview:null,activity:[],users:[],loading:false};
 const $=id=>document.getElementById(id);
@@ -38,8 +38,8 @@ const getToken=()=>sessionStorage.getItem(TOKEN_KEY)||'';
 const authHeaders=()=>{const token=getToken();return token?{Authorization:'Bearer '+token}:{};};
 const esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const timeAgo=value=>{const seconds=Math.max(0,(Date.now()-new Date(value).getTime())/1000);return seconds<60?Math.floor(seconds)+'s ago':seconds<3600?Math.floor(seconds/60)+'m ago':Math.floor(seconds/3600)+'h ago'};
-if(!getToken() && sessionStorage.getItem('aither_console_unlocked')!=='1') location.replace('./');
-async function get(path){const response=await fetch(API+path,{credentials:'include',cache:'no-store',headers:authHeaders()});if(response.status===401||response.status===403){sessionStorage.removeItem(TOKEN_KEY);sessionStorage.removeItem('aither_console_unlocked');location.replace('./');throw Error('Access required.');}if(!response.ok)throw Error('Backend request failed ('+response.status+').');return response.json();}
+if(!getToken()) location.replace('./');
+async function get(path){const response=await fetch(API+path,{mode:'cors',credentials:'include',cache:'no-store',headers:authHeaders()});const data=await response.json().catch(()=>({}));if(response.status===401||response.status===403){sessionStorage.removeItem(TOKEN_KEY);sessionStorage.removeItem('aither_console_unlocked');location.replace('./');throw Error(data.detail||'Admin access required.');}if(!response.ok)throw Error(data.detail||('Backend request failed ('+response.status+').'));return data;}
 function renderApps(){const apps=Array.isArray(state.overview?.apps_last_15m)?state.overview.apps_last_15m:[];$('appCount').textContent=apps.length+' app'+(apps.length===1?'':'s');$('apps').innerHTML=apps.length?'<div class="row head"><div>App</div><div>Events</div><div>Status</div><div>Window</div></div>'+apps.map(app=>'<div class="row"><div><strong>'+esc(app.app_id)+'</strong></div><div>'+esc(app.events)+'</div><div><span class="pill">Receiving telemetry</span></div><div class="muted">15 minutes</div></div>').join(''):'<div class="empty">No telemetry received yet.</div>';}
 function renderActivity(){const query=$('activitySearch').value.trim().toLowerCase();const rows=state.activity.filter(item=>!query||[item.app_id,item.event,item.user_email].some(value=>String(value||'').toLowerCase().includes(query)));$('activity').innerHTML=rows.length?'<div class="row head"><div>App</div><div>Event</div><div>User</div><div>Time</div></div>'+rows.map(item=>'<div class="row"><div><span class="pill">'+esc(item.app_id)+'</span></div><div><strong>'+esc(item.event)+'</strong></div><div class="muted">'+esc(item.user_email||'anonymous')+'</div><div class="muted">'+esc(timeAgo(item.created_at))+'</div></div>').join(''):'<div class="empty">'+(query?'No matching activity.':'No activity yet.')+'</div>';}
 function renderUsers(){const query=$('userSearch').value.trim().toLowerCase();const rows=state.users.filter(user=>!query||[user.name,user.email].some(value=>String(value||'').toLowerCase().includes(query)));$('usersTable').innerHTML=rows.length?'<div class="row head"><div>Name</div><div>Email</div><div>Verification</div><div>Created</div></div>'+rows.map(user=>'<div class="row"><div><strong>'+esc(user.name||'Unnamed')+'</strong></div><div>'+esc(user.email)+'</div><div><span class="pill">'+(user.email_verified?'Verified':'Unverified')+'</span></div><div class="muted">'+esc(new Date(user.created_at).toLocaleString())+'</div></div>').join(''):'<div class="empty">'+(query?'No matching accounts.':'No accounts.')+'</div>';}
@@ -47,7 +47,7 @@ async function load(){if(state.loading)return;state.loading=true;$('live').textC
 $('refresh').onclick=load;
 $('activitySearch').oninput=renderActivity;
 $('userSearch').oninput=renderUsers;
-$('logout').onclick=async()=>{try{await fetch(API+'/api/auth/logout',{method:'POST',credentials:'include',headers:authHeaders()})}catch{}sessionStorage.removeItem(TOKEN_KEY);sessionStorage.removeItem('aither_console_unlocked');location.replace('./');};
+$('logout').onclick=async()=>{try{await fetch(API+'/api/auth/logout',{method:'POST',mode:'cors',credentials:'include',headers:authHeaders()})}catch{}sessionStorage.removeItem(TOKEN_KEY);sessionStorage.removeItem('aither_console_unlocked');location.replace('./');};
 $('export').onclick=()=>{if(!state.overview){alert('Load the dashboard first.');return;}const data={exported_at:new Date().toISOString(),overview:state.overview,activity:state.activity,users:state.users};const url=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));const link=document.createElement('a');link.href=url;link.download='aither-admin-export.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
 load();setInterval(load,15000);
 </script>
