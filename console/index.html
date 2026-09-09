@@ -28,36 +28,48 @@
   <a class="back" href="../">Return to Aither</a>
 </main>
 <script>
-const API='https://aitherbackend.onrender.com';
+const API='https://aitherbackendnew.onrender.com';
 const TOKEN_KEY='aither_admin_session_token';
 const $=id=>document.getElementById(id);
 const status=(text,type='')=>{$('status').textContent=text;$('status').className='status '+type};
 const getToken=()=>sessionStorage.getItem(TOKEN_KEY)||'';
 const authHeaders=()=>{const token=getToken();return token?{Authorization:'Bearer '+token}:{};};
-if(sessionStorage.getItem('aither_console_unlocked')!=='1' && !getToken()) location.replace('../');
 $('show').onclick=()=>{const input=$('password');const visible=input.type==='password';input.type=visible?'text':'password';$('show').textContent=visible?'Hide':'Show';$('show').setAttribute('aria-label',visible?'Hide password':'Show password');};
 $('loginForm').onsubmit=async event=>{
   event.preventDefault();
   const email=$('email').value.trim(),password=$('password').value;
   if(!email||!password){status('Enter your email and password.','bad');return;}
   $('login').disabled=true;$('login').textContent='Signing in…';status('Checking credentials…');
+  const controller=new AbortController();
+  const timeout=setTimeout(()=>controller.abort(),30000);
   try{
-    const response=await fetch(API+'/api/auth/login',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password})});
+    const response=await fetch(API+'/api/auth/login',{method:'POST',mode:'cors',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password}),signal:controller.signal});
     const data=await response.json().catch(()=>({}));
-    if(!response.ok) throw new Error(data.detail||'Invalid email or password.');
-    if(!data.session_token) throw new Error('The backend did not return a session token.');
+    if(!response.ok){
+      if(response.status===401) throw new Error('Invalid email or password.');
+      if(response.status===403) throw new Error('This account is not allowed to use admin access.');
+      throw new Error(data.detail||('Backend login failed ('+response.status+').'));
+    }
+    if(!data.session_token) throw new Error('Login succeeded, but the backend did not return a session token.');
     sessionStorage.setItem(TOKEN_KEY,data.session_token);
     sessionStorage.setItem('aither_console_unlocked','1');
-    const check=await fetch(API+'/api/admin/overview',{credentials:'include',cache:'no-store',headers:authHeaders()});
-    if(!check.ok) {
-      sessionStorage.removeItem(TOKEN_KEY);
-      if(check.status===403) throw new Error('This account does not have admin access.');
-      if(check.status===401) throw new Error('The admin session was rejected by the backend.');
-      throw new Error('The backend is unavailable.');
+    status('Credentials accepted. Checking admin access…');
+    const check=await fetch(API+'/api/admin/overview',{mode:'cors',credentials:'include',cache:'no-store',headers:authHeaders(),signal:controller.signal});
+    const checkData=await check.json().catch(()=>({}));
+    if(!check.ok){
+      sessionStorage.removeItem(TOKEN_KEY);sessionStorage.removeItem('aither_console_unlocked');
+      if(check.status===403) throw new Error('Login worked, but this email is not in the admin allowlist.');
+      if(check.status===401) throw new Error('Login worked, but the admin session was rejected.');
+      throw new Error(checkData.detail||('Admin check failed ('+check.status+').'));
     }
     status('Admin access confirmed.','good');
     setTimeout(()=>location.replace('./dashboard.html'),180);
-  }catch(error){status(error.message||'Unable to sign in.','bad');$('login').disabled=false;$('login').textContent='Sign in';}
+  }catch(error){
+    if(error.name==='AbortError') status('The backend took too long to respond. Please try again.','bad');
+    else if(error instanceof TypeError) status('Could not connect to the Aither backend. Check the backend deployment and try again.','bad');
+    else status(error.message||'Unable to sign in.','bad');
+    $('login').disabled=false;$('login').textContent='Sign in';
+  }finally{clearTimeout(timeout);}
 };
 </script>
 </body>
